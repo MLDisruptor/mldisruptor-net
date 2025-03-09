@@ -19,7 +19,40 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{2E091E57-5
 	ProjectSection(SolutionItems) = preProject
 		..\..\.gitignore = ..\..\.gitignore
 		..\..\LICENSE = ..\..\LICENSE
+		..\..\package.json = ..\..\package.json
 		..\..\README.md = ..\..\README.md
+		..\..\tsconfig.json = ..\..\tsconfig.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FA914B18-81E2-482C-816F-41D3CC80513B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{39BF3F84-F578-4819-9CDB-C031488ABF4C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{6CCC4AA4-C176-4D61-9FBC-E0463B79C4A6}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\.github\workflows\ci.yml = ..\..\.github\workflows\ci.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".hooks", ".hooks", "{83BABD6E-B994-41C4-B49E-29CDF2A168EC}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\.hooks\pre-commit = ..\..\.hooks\pre-commit
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".copilot", ".copilot", "{F8FF9DAE-CB2E-4856-AE52-F719731EFD93}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\.copilot\code_generation.md = ..\..\.copilot\code_generation.md
+		..\..\.copilot\commit_message_generation.md = ..\..\.copilot\commit_message_generation.md
+		..\..\.copilot\review_selection.md = ..\..\.copilot\review_selection.md
+		..\..\.copilot\test_generation.md = ..\..\.copilot\test_generation.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eng", "eng", "{51809625-7918-4E20-A0BE-7202B9D791D8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src-tests", "src-tests", "{6392B827-E591-4F31-BE92-06B1530285A3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "packages", "packages", "{7F1A84D5-5A00-4CF6-B0B7-7661C8E086E3}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\eng\src-tests\packages\mldisruptor.net.tests.task.ts = ..\..\eng\src-tests\packages\mldisruptor.net.tests.task.ts
 	EndProjectSection
 EndProject
 Global
@@ -46,9 +79,19 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B70BC202-2FC9-4184-93B5-41C90F8691D3} = {DA61B5FF-7E54-4752-A3BE-6977F2B08DC2}
+		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {FA914B18-81E2-482C-816F-41D3CC80513B}
 		{DA61B5FF-7E54-4752-A3BE-6977F2B08DC2} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{27045BF8-EE56-4892-ABE6-10EC9618E35B} = {FA914B18-81E2-482C-816F-41D3CC80513B}
 		{BD29A481-DF93-4128-A3F2-57AA22D420AB} = {27045BF8-EE56-4892-ABE6-10EC9618E35B}
 		{993703FD-1FAA-48C2-B973-382C6FE08A26} = {27045BF8-EE56-4892-ABE6-10EC9618E35B}
+		{FA914B18-81E2-482C-816F-41D3CC80513B} = {2E091E57-5DE3-4CCD-991C-C45146CD6E2C}
+		{39BF3F84-F578-4819-9CDB-C031488ABF4C} = {2E091E57-5DE3-4CCD-991C-C45146CD6E2C}
+		{6CCC4AA4-C176-4D61-9FBC-E0463B79C4A6} = {39BF3F84-F578-4819-9CDB-C031488ABF4C}
+		{83BABD6E-B994-41C4-B49E-29CDF2A168EC} = {2E091E57-5DE3-4CCD-991C-C45146CD6E2C}
+		{F8FF9DAE-CB2E-4856-AE52-F719731EFD93} = {2E091E57-5DE3-4CCD-991C-C45146CD6E2C}
+		{51809625-7918-4E20-A0BE-7202B9D791D8} = {2E091E57-5DE3-4CCD-991C-C45146CD6E2C}
+		{6392B827-E591-4F31-BE92-06B1530285A3} = {51809625-7918-4E20-A0BE-7202B9D791D8}
+		{7F1A84D5-5A00-4CF6-B0B7-7661C8E086E3} = {6392B827-E591-4F31-BE92-06B1530285A3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {120FC032-D23A-4547-A4F3-14FA4AA701BB}
