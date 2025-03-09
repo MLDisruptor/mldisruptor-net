@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MLDisruptor.NET.Tests", "..\tests\packages\MLDisruptor.NET.Tests\MLDisruptor.NET.Tests.csproj", "{B70BC202-2FC9-4184-93B5-41C90F8691D3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "packages", "packages", "{DA61B5FF-7E54-4752-A3BE-6977F2B08DC2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "packages", "packages", "{27045BF8-EE56-4892-ABE6-10EC9618E35B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MLDisruptor.NET", "..\packages\MLDisruptor.NET\MLDisruptor.NET.csproj", "{BD29A481-DF93-4128-A3F2-57AA22D420AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MLDisruptor.NET.PerformancePredictor", "..\packages\MLDisruptor.NET.PerformancePredictor\MLDisruptor.NET.PerformancePredictor.csproj", "{993703FD-1FAA-48C2-B973-382C6FE08A26}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{2E091E57-5DE3-4CCD-991C-C45146CD6E2C}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\.gitignore = ..\..\.gitignore
+		..\..\LICENSE = ..\..\LICENSE
+		..\..\README.md = ..\..\README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B70BC202-2FC9-4184-93B5-41C90F8691D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B70BC202-2FC9-4184-93B5-41C90F8691D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B70BC202-2FC9-4184-93B5-41C90F8691D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B70BC202-2FC9-4184-93B5-41C90F8691D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD29A481-DF93-4128-A3F2-57AA22D420AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD29A481-DF93-4128-A3F2-57AA22D420AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD29A481-DF93-4128-A3F2-57AA22D420AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD29A481-DF93-4128-A3F2-57AA22D420AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{993703FD-1FAA-48C2-B973-382C6FE08A26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{993703FD-1FAA-48C2-B973-382C6FE08A26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{993703FD-1FAA-48C2-B973-382C6FE08A26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{993703FD-1FAA-48C2-B973-382C6FE08A26}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B70BC202-2FC9-4184-93B5-41C90F8691D3} = {DA61B5FF-7E54-4752-A3BE-6977F2B08DC2}
+		{DA61B5FF-7E54-4752-A3BE-6977F2B08DC2} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{BD29A481-DF93-4128-A3F2-57AA22D420AB} = {27045BF8-EE56-4892-ABE6-10EC9618E35B}
+		{993703FD-1FAA-48C2-B973-382C6FE08A26} = {27045BF8-EE56-4892-ABE6-10EC9618E35B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {120FC032-D23A-4547-A4F3-14FA4AA701BB}
+	EndGlobalSection
+EndGlobal
