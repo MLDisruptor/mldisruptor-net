@@ -11,7 +11,12 @@ jobs:
 
         steps:
             - name: Checkout code
-              uses: actions/checkout@v2
+              uses: actions/checkout@v3
+
+            - name: Install dotnet
+              uses: actions/setup-dotnet@v3
+              with:
+                dotnet-version: '8.x.x'
 
             - name: Install Node.js v22.14.0
               uses: actions/setup-node@v3
