@@ -1,11 +1,11 @@
-using MLDisruptor.NET.PerformancePredictor;
+using MLDisruptor.NET.Tests;
 
-namespace MLDisruptor.NET.Tests
+namespace MLDisruptor.NET.PerformancePredictor.Tests
 {
-    public class UnitTest1
+    public class IntegrationTests
     {
         [Fact]
-        public void Test1()
+        public void ShouldGatherPredictions()
         {
             // run the adaptable event handler to gather training data and make predictions
             var bufferSize = 1024;
@@ -35,11 +35,7 @@ namespace MLDisruptor.NET.Tests
 
             Thread.Sleep(20000);
 
-            foreach(var item in logger.Predictions)
-            {
-                Console.WriteLine(item);
-            }
-
+            Assert.NotEmpty(logger.Predictions);
         }
     }
 }
