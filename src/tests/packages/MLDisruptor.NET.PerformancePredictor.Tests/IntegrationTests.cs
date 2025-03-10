@@ -1,5 +1,3 @@
-using MLDisruptor.NET.Tests;
-
 namespace MLDisruptor.NET.PerformancePredictor.Tests
 {
     public class IntegrationTests

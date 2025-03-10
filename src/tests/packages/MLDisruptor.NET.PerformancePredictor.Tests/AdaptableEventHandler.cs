@@ -1,7 +1,7 @@
 ﻿using Disruptor;
 using MLDisruptor.NET.PerformancePredictor;
 
-namespace MLDisruptor.NET.Tests
+namespace MLDisruptor.NET.PerformancePredictor.Tests
 {
     public class AdaptiveEventHandler : IValueEventHandler<AdaptableEvent>
     {

@@ -1,4 +1,4 @@
-﻿namespace MLDisruptor.NET.Tests
+﻿namespace MLDisruptor.NET.PerformancePredictor.Tests
 {
     public class Logger
     {

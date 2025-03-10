@@ -52,6 +52,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src-tests", "src-tests", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "packages", "packages", "{7F1A84D5-5A00-4CF6-B0B7-7661C8E086E3}"
 	ProjectSection(SolutionItems) = preProject
+		..\..\eng\src-tests\packages\mldisruptor.net.performance-predictor.tests.task.ts = ..\..\eng\src-tests\packages\mldisruptor.net.performance-predictor.tests.task.ts
 		..\..\eng\src-tests\packages\mldisruptor.net.tests.task.ts = ..\..\eng\src-tests\packages\mldisruptor.net.tests.task.ts
 	EndProjectSection
 EndProject
