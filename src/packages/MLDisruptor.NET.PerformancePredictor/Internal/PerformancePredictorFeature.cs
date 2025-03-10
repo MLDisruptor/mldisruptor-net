@@ -1,8 +1,7 @@
 ﻿using Disruptor;
 using Disruptor.Dsl;
-using MLDisruptor.NET.PerformancePredictor.Internal;
 
-namespace MLDisruptor.NET.PerformancePredictor
+namespace MLDisruptor.NET.PerformancePredictor.Internal
 {
     internal class PerformancePredictorFeature : IMLFeature
     {

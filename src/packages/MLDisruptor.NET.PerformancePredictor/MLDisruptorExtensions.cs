@@ -1,4 +1,6 @@
-﻿namespace MLDisruptor.NET.PerformancePredictor
+﻿using MLDisruptor.NET.PerformancePredictor.Internal;
+
+namespace MLDisruptor.NET.PerformancePredictor
 {
     public static class MLDisruptorExtensions
     {
