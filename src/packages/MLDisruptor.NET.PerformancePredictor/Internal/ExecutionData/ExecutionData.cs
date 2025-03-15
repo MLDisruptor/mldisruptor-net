@@ -1,6 +1,6 @@
 ﻿using Microsoft.ML.Data;
 
-namespace MLDisruptor.NET.PerformancePredictor.Internal
+namespace MLDisruptor.NET.PerformancePredictor.Internal.ExecutionData
 {
     internal class ExecutionData
     {

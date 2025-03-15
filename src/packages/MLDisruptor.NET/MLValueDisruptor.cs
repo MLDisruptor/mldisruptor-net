@@ -4,6 +4,10 @@ using MLDisruptor.NET.Internal;
 
 namespace MLDisruptor.NET
 {
+    /// <summary>
+    /// A <see cref="ValueDisruptor{T}"/> that provides ML abilities.
+    /// </summary>
+    /// <typeparam name="T">the type of event used.</typeparam>
     public class MLValueDisruptor<T> : ValueDisruptor<T>
         where T : struct
     {
@@ -58,7 +62,7 @@ namespace MLDisruptor.NET
         }
 
         /// <summary>
-        /// Get the ML abilities.
+        /// Get the ML abilities of the <see cref="MLValueDisruptor{T}"/>.
         /// </summary>
         public IMLAbilities ML => _ml;
 

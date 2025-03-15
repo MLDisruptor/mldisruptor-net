@@ -1,2 +1,2 @@
 #!/bin/sh
-act
+npm run run:ci

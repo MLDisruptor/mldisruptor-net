@@ -1,10 +1,14 @@
 ﻿using Microsoft.ML;
 
-namespace MLDisruptor.NET.PerformancePredictor.Internal
+namespace MLDisruptor.NET.PerformancePredictor.Internal.Core
 {
     internal class ModelStore
     {
         private volatile ITransformer _model;
+
+        private ModelStore()
+        {
+        }
 
         public static ModelStore Create()
         {

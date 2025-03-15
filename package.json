@@ -2,6 +2,7 @@
   "name": "mldisruptor-net",
   "version": "0.0.1",
   "scripts": {
+    "run:ci": "act",
     "tests:packages:mldisruptor-net-tests": "dotnet test ./src/tests/packages/MLDisruptor.NET.Tests/MLDisruptor.NET.Tests.csproj --configuration Release",
     "tests:packages:mldisruptor-net-performance-predictor-tests": "dotnet test ./src/tests/packages/MLDisruptor.NET.PerformancePredictor.Tests/MLDisruptor.NET.PerformancePredictor.Tests.csproj --configuration Release"
   },

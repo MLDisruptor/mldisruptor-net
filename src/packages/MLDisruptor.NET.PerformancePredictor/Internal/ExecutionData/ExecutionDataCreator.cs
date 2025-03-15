@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace MLDisruptor.NET.PerformancePredictor.Internal
+namespace MLDisruptor.NET.PerformancePredictor.Internal.ExecutionData
 {
     internal static class ExecutionDataCreator
     {

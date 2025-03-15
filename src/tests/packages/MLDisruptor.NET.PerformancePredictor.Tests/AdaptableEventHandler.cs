@@ -1,15 +1,14 @@
 ﻿using Disruptor;
-using MLDisruptor.NET.PerformancePredictor;
 
 namespace MLDisruptor.NET.PerformancePredictor.Tests
 {
     public class AdaptiveEventHandler : IValueEventHandler<AdaptableEvent>
     {
-        private readonly IPerformancePredictor _predictor;
+        private readonly IExecutionPerformancePredictor<AdaptableEvent> _predictor;
         private readonly Logger _logger;
         private float _prediction = -1;
 
-        public AdaptiveEventHandler(IPerformancePredictor predictor, Logger logger)
+        public AdaptiveEventHandler(IExecutionPerformancePredictor<AdaptableEvent> predictor, Logger logger)
         {
             _predictor = predictor;
             _logger = logger;

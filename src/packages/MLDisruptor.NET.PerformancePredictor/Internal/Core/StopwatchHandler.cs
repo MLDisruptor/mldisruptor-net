@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace MLDisruptor.NET.PerformancePredictor.Internal
+namespace MLDisruptor.NET.PerformancePredictor.Internal.Core
 {
     internal class StopwatchHandler
     {

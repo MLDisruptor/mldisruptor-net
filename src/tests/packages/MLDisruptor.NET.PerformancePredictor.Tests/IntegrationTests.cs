@@ -9,7 +9,7 @@ namespace MLDisruptor.NET.PerformancePredictor.Tests
             var bufferSize = 1024;
             var logger = new Logger();
             var disruptor = new MLValueDisruptor<AdaptableEvent>(() => new AdaptableEvent(), bufferSize, TaskScheduler.Default);
-            var predictor = disruptor.ML.GetPerformancePredictor();
+            var predictor = disruptor.ML.CreatePerformancePredictor<AdaptableEvent>();
             disruptor.HandleEventsWith(new AdaptiveEventHandler(predictor, logger));
             var _ringBuffer = disruptor.Start();
 
