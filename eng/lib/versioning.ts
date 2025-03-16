@@ -43,7 +43,7 @@ function calculateSemVerString(incrementType: IncrementType, parts: VersionParts
             return `${parts.major}.${parts.minor}.${parts.patch + 1}.0`;
         case 'revision':
         default:
-            return `${parts.major}.${parts.minor}.${parts.patch}.${parts.revision}`;
+            return `${parts.major}.${parts.minor}.${parts.patch}.${parts.revision + 1}`;
     }
 }
 
@@ -94,9 +94,11 @@ function main() {
     }
 
     const latestTag = getLatestTag();
+    writeOutput('latesttag', latestTag);
     console.log(`Latest tag: ${latestTag}`);
 
     const incrementType = determineIncrementType();
+    writeOutput('increment', incrementType);
     console.log(`Determined increment type: ${incrementType}`);
 
     const newVersion = incrementVersion(latestTag, incrementType);

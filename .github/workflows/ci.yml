@@ -39,10 +39,17 @@ jobs:
                 npm ci
 
             - name: Increment version and create tag
-              id: versioning # Allows us to reference the output of this step
+              id: versioning
               run: npx tsx ./eng/lib/versioning.ts
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Calculate Version Without Revision
+              id: version_no_revision
+              run: |
+                VERSION_NO_REVISION=${{ steps.versioning.outputs.version }} # Full version
+                VERSION_NO_REVISION=${VERSION_NO_REVISION%.*} # Remove the last ".0"
+                echo "VERSION_NO_REVISION=$VERSION_NO_REVISION" >> $GITHUB_OUTPUT
 
             - name: Restore ML Disruptor .NET
               run:
@@ -63,6 +70,20 @@ jobs:
               run:
                 npx tsx ./eng/tasks/test.mldisruptor.net.task.ts
 
+            - name: Pack ML Disruptor .NET
+              id: mldisruptor-net-pack
+              run: |
+                dotnet pack ./src/packages/MLDisruptor.NET/MLDisruptor.NET.csproj -c Release --verbosity detailed /p:Version=${{ steps.versioning.outputs.version }}
+                echo "Copying .nupkg files to ./mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}"
+                cp ./src/packages/MLDisruptor.NET/bin/Release/*.nupkg ./mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}
+
+            - name: Publish ML Disruptor .NET NuGet
+              env:
+                ISACT: ${{ env.ACT || 'false' }}
+                NUGET_API_KEY: ${{ secrets.NUGET_MLDISRUPTOR_NET_KEY }}
+              if: ${{ env.ISACT == 'false' && github.ref == 'refs/heads/main' && steps.tests.outcome == 'success' && steps.mldisruptor-net-pack.outcome == 'success' }}
+              run: dotnet nuget push ./mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}/*.nupkg --source https://api.nuget.org/v3/index.json --api-key $NUGET_API_KEY
+
             - name: Upload ML Disruptor .NET Artifacts
               env:
                 ISACT: ${{ env.ACT || 'false' }}
@@ -73,6 +94,26 @@ jobs:
                 name: mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}
                 path: ./mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}
 
+            - name: List ML Disruptor .NET Artifacts Directory for ${{ steps.versioning.outputs.version }}
+              env:
+                ISACT: ${{ env.ACT || 'false' }}
+              if: ${{ env.ISACT == 'true' }}
+              run: |
+                echo "Checking for .nupkg file in ./mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}"
+                ls -la ./mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}
+
+            - name: Local NuGet Test for ML Disruptor .NET
+              env:
+                ISACT: ${{ env.ACT || 'false' }}
+              if: ${{ env.ISACT == 'true' }}
+              run: |
+                if [ -f "./mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}/MLDisruptor.NET.${{ steps.version_no_revision.outputs.VERSION_NO_REVISION }}.nupkg" ]; then
+                  echo "NuGet package found: MLDisruptor.NET.${{ steps.version_no_revision.outputs.VERSION_NO_REVISION }}.nupkg"
+                else
+                  echo "Error: NuGet package not found!"
+                  exit 1
+                fi
+
             - name: Upload ML Disruptor .NET Performance Predictor Artifacts
               env:
                 ISACT: ${{ env.ACT || 'false' }}
@@ -82,12 +123,6 @@ jobs:
               with:
                 name: mldisruptor-net-performancepredictor-artifacts_${{ steps.versioning.outputs.version }}
                 path: ./mldisruptor-net-performancepredictor-artifacts_${{ steps.versioning.outputs.version }}
-
-            - name: Publish NuGet Package
-              if: ${{ github.ref == 'refs/heads/main' && steps.tests.outcome == 'success' && steps.mldisruptor-net-artifacts.outcome == 'success' }}
-              run: dotnet nuget push ./mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}/MLDisruptor.NET.${{ steps.versioning.outputs.version }}.nupkg --source nuget.org
-              env:
-                NUGET_API_KEY: ${{ secrets.NUGET_MLDISRUPTOR_NET_KEY }}
 
             - name: Pipline Ending At
               run: |
