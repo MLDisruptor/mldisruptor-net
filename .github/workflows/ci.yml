@@ -21,6 +21,8 @@ jobs:
 
             - name: Checkout code
               uses: actions/checkout@v3
+              with:
+                fetch-depth: 0 # Fetch all history for tags
 
             - name: Install dotnet
               uses: actions/setup-dotnet@v3
@@ -37,7 +39,7 @@ jobs:
                 npm ci
 
             - name: Increment version and create tag
-              id: versioning
+              id: versioning # Allows us to reference the output of this step
               run: npx tsx ./eng/lib/versioning.ts
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
