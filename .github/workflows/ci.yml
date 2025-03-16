@@ -1,4 +1,4 @@
-name: Disruptor.NET CI
+name: MLDisruptor.NET CI
 
 on:
     push:
@@ -73,7 +73,7 @@ jobs:
             - name: Pack ML Disruptor .NET
               id: mldisruptor-net-pack
               run: |
-                dotnet pack ./src/packages/MLDisruptor.NET/MLDisruptor.NET.csproj -c Release --verbosity detailed /p:Version=${{ steps.versioning.outputs.version }}
+                dotnet pack ./src/packages/MLDisruptor.NET/MLDisruptor.NET.csproj -c Release --no-build --verbosity detailed /p:Version=${{ steps.versioning.outputs.version }}
                 echo "Copying .nupkg files to ./mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}"
                 cp ./src/packages/MLDisruptor.NET/bin/Release/*.nupkg ./mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}
 
