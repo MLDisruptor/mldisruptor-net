@@ -1,2 +1,2 @@
 #!/bin/sh
-npm run run:ci
+npm run run:ci-check

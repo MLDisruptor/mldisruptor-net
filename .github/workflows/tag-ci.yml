@@ -1,11 +1,9 @@
-name: Disruptor.NET CI
+name: Tagged Disruptor.NET CI
 
 on:
     push:
-        branches:
-            - main
-        tags-ignore:
-            - '*' # Don't run on tag pushes
+        tags:
+            - '*'
 
 jobs:
     build:
@@ -29,17 +27,11 @@ jobs:
               run:
                 npm ci
 
-            - name: Increment version and create tag
-              id: versioning
-              run: npx tsx ./eng/lib/versioning.ts
-
             - name: Restore ML Disruptor .NET
               run:
                 npx tsx ./eng/tasks/restore.mldisruptor.net.task.ts
 
-            - name: Build ML Disruptor .NET (${{ steps.versioning.outputs.version }})
-              env:
-                VERSION: ${{ steps.versioning.outputs.version }}
+            - name: Build ML Disruptor .NET
               run:
                 npx tsx ./eng/tasks/build.mldisruptor.net.task.ts
 

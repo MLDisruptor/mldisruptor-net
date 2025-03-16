@@ -2,9 +2,10 @@
   "name": "mldisruptor-net",
   "version": "0.0.1",
   "scripts": {
-    "run:ci": "act",
-    "tests:packages:mldisruptor-net-tests": "dotnet test ./src/tests/packages/MLDisruptor.NET.Tests/MLDisruptor.NET.Tests.csproj --configuration Release",
-    "tests:packages:mldisruptor-net-performance-predictor-tests": "dotnet test ./src/tests/packages/MLDisruptor.NET.PerformancePredictor.Tests/MLDisruptor.NET.PerformancePredictor.Tests.csproj --configuration Release"
+    "run:ci-check": "act --env VERSION=0.0.10",
+    "restore:mldisruptor-net": "dotnet restore ./src/solutions/MLDisruptor.Net.sln",
+    "build:mldisruptor-net": "dotnet build ./src/solutions/MLDisruptor.Net.sln -c Release --no-restore /p:Version=$VERSION",
+    "test:mldisruptor-net": "dotnet test ./src/solutions/MLDisruptor.Net.sln -c Release --no-build"
   },
   "keywords": [
     "ML Disruptor",
