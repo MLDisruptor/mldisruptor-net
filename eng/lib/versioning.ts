@@ -48,8 +48,20 @@ function determineIncrementType(): IncrementType {
 
 // Create a new Git tag
 function createGitTag(newVersion: string) {
+    const githubToken = process.env.GITHUB_TOKEN;
+
+    if (!githubToken) {
+        throw new Error('GITHUB_TOKEN is not set.');
+    }
+
+    // Configure Git to use the token for authentication
+    execSync(`git config user.name "github-actions[bot]"`);
+    execSync(`git config user.email "github-actions[bot]@users.noreply.github.com"`);
+    execSync(`git remote set-url origin https://x-access-token:${githubToken}@github.com/MLDisruptor/mldisruptor-net.git`);
+
+    // Create and push the tag
     execSync(`git tag ${newVersion}`);
-    execSync('git push --tags');
+    execSync(`git push origin ${newVersion}`);
     console.log(`Created and pushed new tag: ${newVersion}`);
 }
 
