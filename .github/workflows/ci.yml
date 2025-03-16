@@ -51,12 +51,35 @@ jobs:
             - name: Build ML Disruptor .NET (${{ steps.versioning.outputs.version }})
               env:
                 VERSION: ${{ steps.versioning.outputs.version }}
-              run:
+              run: |
                 npx tsx ./eng/tasks/build.mldisruptor.net.task.ts
+                mkdir -p mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}
+                cp -r ./src/packages/MLDisruptor.NET/bin/Release/net8.0/* ./mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}
+                mkdir -p mldisruptor-net-performancepredictor-artifacts_${{ steps.versioning.outputs.version }}
+                cp -r ./src/packages/MLDisruptor.NET.PerformancePredictor/bin/Release/net8.0/* ./mldisruptor-net-performancepredictor-artifacts_${{ steps.versioning.outputs.version }}
 
             - name: Run ML Disruptor Tests
+              id: tests
               run:
                 npx tsx ./eng/tasks/test.mldisruptor.net.task.ts
+
+            - name: Upload ML Disruptor .NET Artifacts
+              env:
+                ISACT: ${{ env.ACT || 'false' }}
+              if: ${{ env.ISACT == 'false' && success() && steps.tests.outcome == 'success' }} # Only upload if tests succeed
+              uses: actions/upload-artifact@v3
+              with:
+                name: mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}
+                path: ./mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}
+
+            - name: Upload ML Disruptor .NET Performance Predictor Artifacts
+              env:
+                ISACT: ${{ env.ACT || 'false' }}
+              if: ${{ env.ISACT == 'false' && success() && steps.tests.outcome == 'success' }} # Only upload if tests succeed
+              uses: actions/upload-artifact@v3
+              with:
+                name: mldisruptor-net-performancepredictor-artifacts_${{ steps.versioning.outputs.version }}
+                path: ./mldisruptor-net-performancepredictor-artifacts_${{ steps.versioning.outputs.version }}
 
             - name: Pipline Ending At
               run: |
