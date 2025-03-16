@@ -67,6 +67,7 @@ jobs:
               env:
                 ISACT: ${{ env.ACT || 'false' }}
               if: ${{ env.ISACT == 'false' && success() && steps.tests.outcome == 'success' }} # Only upload if tests succeed
+              id: mldisruptor-net-artifacts
               uses: actions/upload-artifact@v4
               with:
                 name: mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}
@@ -76,10 +77,17 @@ jobs:
               env:
                 ISACT: ${{ env.ACT || 'false' }}
               if: ${{ env.ISACT == 'false' && success() && steps.tests.outcome == 'success' }} # Only upload if tests succeed
+              id: mldisruptor-net-performancepredictor-artifacts
               uses: actions/upload-artifact@v4
               with:
                 name: mldisruptor-net-performancepredictor-artifacts_${{ steps.versioning.outputs.version }}
                 path: ./mldisruptor-net-performancepredictor-artifacts_${{ steps.versioning.outputs.version }}
+
+            - name: Publish NuGet Package
+              if: ${{ github.ref == 'refs/heads/main' && steps.tests.outcome == 'success' && steps.mldisruptor-net-artifacts.outcome == 'success' }}
+              run: dotnet nuget push ./mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}/MLDisruptor.NET.${{ steps.versioning.outputs.version }}.nupkg --source nuget.org
+              env:
+                NUGET_API_KEY: ${{ secrets.NUGET_MLDISRUPTOR_NET_KEY }}
 
             - name: Pipline Ending At
               run: |

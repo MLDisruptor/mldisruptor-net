@@ -1,8 +1,8 @@
 import { execSync } from 'child_process';
 import fs from 'fs';
 
-const defaultVersion = '0.0.10';
-type IncrementType = 'major' | 'minor' | 'patch';
+const defaultVersion = '0.0.10.0';
+type IncrementType = 'major' | 'minor' | 'patch' | 'revision';
 
 // Get the latest Git tag
 function getLatestTag() {
@@ -15,17 +15,35 @@ function getLatestTag() {
 }
 
 // Increment the version based on SemVer rules
-function incrementVersion(currentVersion: string, incrementType: IncrementType) {
-    const [major, minor, patch] = currentVersion.split('.').map(Number);
+interface VersionParts {
+    major: number;
+    minor: number;
+    patch: number;
+    revision: number;
+}
 
+function incrementVersion(currentVersion: string, incrementType: IncrementType) {
+    const versionParts = currentVersion.split('.');
+    if (versionParts.length !== 4) {
+        const [major, minor, patch] = currentVersion.split('.').map(Number);
+        return calculateSemVerString(incrementType, { major, minor, patch, revision: 0 });
+    } else {
+        const [major, minor, patch, revision] = currentVersion.split('.').map(Number);
+        return calculateSemVerString(incrementType, { major, minor, patch, revision });
+    }
+}
+
+function calculateSemVerString(incrementType: IncrementType, parts: VersionParts): string {
     switch (incrementType) {
         case 'major':
-            return `${major + 1}.0.0`;
+            return `${parts.major + 1}.0.0.0`;
         case 'minor':
-            return `${major}.${minor + 1}.0`;
+            return `${parts.major}.${parts.minor + 1}.0.0`;
         case 'patch':
+            return `${parts.major}.${parts.minor}.${parts.patch + 1}.0`;
+        case 'revision':
         default:
-            return `${major}.${minor}.${patch + 1}`;
+            return `${parts.major}.${parts.minor}.${parts.patch}.${parts.revision}`;
     }
 }
 
