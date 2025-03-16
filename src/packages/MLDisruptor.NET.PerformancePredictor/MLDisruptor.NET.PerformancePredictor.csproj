@@ -5,6 +5,15 @@
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
     <InformationalVersion>$(Version)</InformationalVersion>
+    <PackageVersion>$(Version)</PackageVersion>
+    <Authors>MLDisruptor.NET</Authors>
+    <Company>MLDisruptor</Company>
+    <Description>Adds Performance Prediction features to MLDisruptor.NET.</Description>
+    <PackageTags>ML;Disruptor;MachineLearning;Performance;Prediction;Predictor</PackageTags>
+    <PackageProjectUrl>https://github.com/MLDisruptor/mldisruptor-net</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/MLDisruptor/mldisruptor-net</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -13,8 +22,16 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\MLDisruptor.NET\MLDisruptor.NET.csproj" />
+    <None Include="README.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MLDisruptor.NET" Version="0.*" />
   </ItemGroup>
 
 </Project>

@@ -7,6 +7,8 @@
 
 [![MLDisruptor.NET](https://img.shields.io/nuget/v/MLDisruptor.NET.svg?logo=nuget)](https://www.nuget.org/packages/MLDisruptor.NET/) | MLDisruptor.NET
 
+[![MLDisruptor.NET.PerformancePredictor](https://img.shields.io/nuget/v/MLDisruptor.NET.PerformancePredictor.svg?logo=nuget)](https://www.nuget.org/packages/MLDisruptor.NET.PerformancePredictor/) | MLDisruptor.NET.PerformancePredictor
+
 # ML Disruptor.NET
 Adds ML capabilities to Disruptor.NET
 

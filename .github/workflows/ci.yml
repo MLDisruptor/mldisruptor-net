@@ -77,12 +77,26 @@ jobs:
                 echo "Copying .nupkg files to ./mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}"
                 cp ./src/packages/MLDisruptor.NET/bin/Release/*.nupkg ./mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}
 
+            - name: Pack ML Disruptor .NET Performance Predictor
+              id: mldisruptor-net-performancepredictor-pack
+              run: |
+                dotnet pack ./src/packages/MLDisruptor.NET.PerformancePredictor/MLDisruptor.NET.PerformancePredictor.csproj -c Release --no-build --verbosity detailed /p:Version=${{ steps.versioning.outputs.version }}
+                echo "Copying .nupkg files to ./mldisruptor-net-performancepredictor-artifacts_${{ steps.versioning.outputs.version }}"
+                cp ./src/packages/MLDisruptor.NET.PerformancePredictor/bin/Release/*.nupkg ./mldisruptor-net-performancepredictor-artifacts_${{ steps.versioning.outputs.version }}
+
             - name: Publish ML Disruptor .NET NuGet
               env:
                 ISACT: ${{ env.ACT || 'false' }}
                 NUGET_API_KEY: ${{ secrets.NUGET_MLDISRUPTOR_NET_KEY }}
               if: ${{ env.ISACT == 'false' && github.ref == 'refs/heads/main' && steps.tests.outcome == 'success' && steps.mldisruptor-net-pack.outcome == 'success' }}
               run: dotnet nuget push ./mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}/*.nupkg --source https://api.nuget.org/v3/index.json --api-key $NUGET_API_KEY
+
+            - name: Publish ML Disruptor .NET Performance Predictor NuGet
+              env:
+                ISACT: ${{ env.ACT || 'false' }}
+                NUGET_API_KEY: ${{ secrets.NUGET_MLDISRUPTOR_NET_KEY }}
+              if: ${{ env.ISACT == 'false' && github.ref == 'refs/heads/main' && steps.tests.outcome == 'success' && steps.mldisruptor-net-performancepredictor-pack.outcome == 'success' }}
+              run: dotnet nuget push ./mldisruptor-net-performancepredictor-artifacts_${{ steps.versioning.outputs.version }}/*.nupkg --source https://api.nuget.org/v3/index.json --api-key $NUGET_API_KEY
 
             - name: Upload ML Disruptor .NET Artifacts
               env:
@@ -102,6 +116,24 @@ jobs:
                 echo "Checking for .nupkg file in ./mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}"
                 ls -la ./mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}
 
+            - name: Upload ML Disruptor .NET Performance Predictor Artifacts
+              env:
+                ISACT: ${{ env.ACT || 'false' }}
+              if: ${{ env.ISACT == 'false' && success() && steps.tests.outcome == 'success' }} # Only upload if tests succeed
+              id: mldisruptor-net-performancepredictor-artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                name: mldisruptor-net-performancepredictor-artifacts_${{ steps.versioning.outputs.version }}
+                path: ./mldisruptor-net-performancepredictor-artifacts_${{ steps.versioning.outputs.version }}
+
+            - name: List ML Disruptor .NET Performance Predictor Artifacts Directory for ${{ steps.versioning.outputs.version }}
+              env:
+                ISACT: ${{ env.ACT || 'false' }}
+              if: ${{ env.ISACT == 'true' }}
+              run: |
+                echo "Checking for .nupkg file in ./mldisruptor-net-performancepredictor-artifacts_${{ steps.versioning.outputs.version }}"
+                ls -la ./mldisruptor-net-performancepredictor-artifacts_${{ steps.versioning.outputs.version }}
+
             - name: Local NuGet Test for ML Disruptor .NET
               env:
                 ISACT: ${{ env.ACT || 'false' }}
@@ -114,15 +146,17 @@ jobs:
                   exit 1
                 fi
 
-            - name: Upload ML Disruptor .NET Performance Predictor Artifacts
+            - name: Local NuGet Test for ML Disruptor .NET Performance Predictor
               env:
                 ISACT: ${{ env.ACT || 'false' }}
-              if: ${{ env.ISACT == 'false' && success() && steps.tests.outcome == 'success' }} # Only upload if tests succeed
-              id: mldisruptor-net-performancepredictor-artifacts
-              uses: actions/upload-artifact@v4
-              with:
-                name: mldisruptor-net-performancepredictor-artifacts_${{ steps.versioning.outputs.version }}
-                path: ./mldisruptor-net-performancepredictor-artifacts_${{ steps.versioning.outputs.version }}
+              if: ${{ env.ISACT == 'true' }}
+              run: |
+                if [ -f "./mldisruptor-net-performancepredictor-artifacts_${{ steps.versioning.outputs.version }}/MLDisruptor.NET.PerformancePredictor.${{ steps.version_no_revision.outputs.VERSION_NO_REVISION }}.nupkg" ]; then
+                  echo "NuGet package found: MLDisruptor.NET.PerformancePredictor.${{ steps.version_no_revision.outputs.VERSION_NO_REVISION }}.nupkg"
+                else
+                  echo "Error: NuGet package not found!"
+                  exit 1
+                fi
 
             - name: Pipline Ending At
               run: |
