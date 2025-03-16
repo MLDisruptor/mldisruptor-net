@@ -67,7 +67,7 @@ jobs:
               env:
                 ISACT: ${{ env.ACT || 'false' }}
               if: ${{ env.ISACT == 'false' && success() && steps.tests.outcome == 'success' }} # Only upload if tests succeed
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               with:
                 name: mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}
                 path: ./mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}
@@ -76,7 +76,7 @@ jobs:
               env:
                 ISACT: ${{ env.ACT || 'false' }}
               if: ${{ env.ISACT == 'false' && success() && steps.tests.outcome == 'success' }} # Only upload if tests succeed
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               with:
                 name: mldisruptor-net-performancepredictor-artifacts_${{ steps.versioning.outputs.version }}
                 path: ./mldisruptor-net-performancepredictor-artifacts_${{ steps.versioning.outputs.version }}
