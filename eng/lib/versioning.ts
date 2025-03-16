@@ -87,7 +87,7 @@ function main() {
     createGitTag(newVersion);
 
     // Output the version for GitHub Actions
-    writeOutput('version', defaultVersion);
+    writeOutput('version', newVersion);
 }
 
 // Helper function to write output to $GITHUB_OUTPUT
