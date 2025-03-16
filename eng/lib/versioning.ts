@@ -1,4 +1,5 @@
 import { execSync } from 'child_process';
+import fs from 'fs';
 
 const defaultVersion = '0.0.10';
 type IncrementType = 'major' | 'minor' | 'patch';
@@ -69,7 +70,7 @@ function createGitTag(newVersion: string) {
 function main() {
     // Check if running in the act environment
     if (process.env.ACT) {
-        console.log(`::set-output name=version::${defaultVersion}`);
+        writeOutput('version', defaultVersion);
         console.log('Skipping versioning because the environment is running under act.');
         return;
     }
@@ -86,7 +87,18 @@ function main() {
     createGitTag(newVersion);
 
     // Output the version for GitHub Actions
-    console.log(`::set-output name=version::${newVersion}`);
+    writeOutput('version', defaultVersion);
+}
+
+// Helper function to write output to $GITHUB_OUTPUT
+function writeOutput(name: string, value: string) {
+    const githubOutput = process.env.GITHUB_OUTPUT;
+    if (!githubOutput) {
+        console.warn(`GITHUB_OUTPUT environment variable is not set. Skipping output ${name}=${value}.`);
+        return;
+    }
+
+    fs.appendFileSync(githubOutput, `${name}=${value}\n`);
 }
 
 // Run the script
