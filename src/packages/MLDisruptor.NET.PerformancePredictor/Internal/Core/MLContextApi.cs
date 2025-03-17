@@ -3,6 +3,20 @@ using Microsoft.ML.Data;
 
 namespace MLDisruptor.NET.PerformancePredictor.Internal.Core
 {
+    internal class PredictOptions<TSrc> where TSrc : class
+    {
+        public ITransformer Transformer { get; set; }
+        public TSrc Data { get; set; }
+        public bool IgnoreMissingColumns { get; set; } = true;
+        public SchemaDefinition? InputSchemaDefinition { get; set; }
+        public SchemaDefinition? OutputSchemaDefinition { get; set; }
+        public PredictOptions(ITransformer transformer, TSrc data)
+        {
+            Transformer = transformer;
+            Data = data;
+        }
+    }
+
     internal class MLContextApi
     {
         private readonly MLContext _context;
@@ -12,13 +26,16 @@ namespace MLDisruptor.NET.PerformancePredictor.Internal.Core
             _context = new MLContext();
         }
 
-        public TDst Predict<TSrc, TDst>(ITransformer transformer, TSrc data,
-            bool ignoreMissingColumns = true, SchemaDefinition inputSchemaDefinition = null, SchemaDefinition outputSchemaDefinition = null)
+        public TDst Predict<TSrc, TDst>(PredictOptions<TSrc> options)
             where TSrc : class
             where TDst : class, new()
         {
-            var predictor = _context.Model.CreatePredictionEngine<TSrc, TDst>(transformer, ignoreMissingColumns, inputSchemaDefinition, outputSchemaDefinition);
-            return predictor.Predict(data);
+            var predictor = _context.Model.CreatePredictionEngine<TSrc, TDst>(
+                options.Transformer,
+                options.IgnoreMissingColumns,
+                options.InputSchemaDefinition,
+                options.OutputSchemaDefinition);
+            return predictor.Predict(options.Data);
         }
 
         public ITransformer TrainFastForest<TRow>(IEnumerable<TRow> trainingData, string keyName, IEnumerable<string> messageNames)

@@ -1,11 +1,8 @@
-﻿using Disruptor;
-using Disruptor.Dsl;
-
-namespace MLDisruptor.NET.Internal
+﻿namespace MLDisruptor.NET.Internal
 {
     internal static class PluginLoader
     {
-        public static IEnumerable<IMLFeature> LoadPlugins<T>(Func<T> eventFactory, int ringBufferSize, TaskScheduler taskScheduler, ProducerType producerType, IWaitStrategy waitStrategy)
+        public static IEnumerable<IMLFeature> LoadPlugins<T>(FeatureOptions<T> options)
         {
             var featureType = typeof(IMLFeature);
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -18,7 +15,12 @@ namespace MLDisruptor.NET.Internal
                 {
                     if (Activator.CreateInstance(type) is IMLFeature feature)
                     {
-                        feature.Initialize(eventFactory, ringBufferSize, taskScheduler, producerType, waitStrategy);
+                        feature.Initialize(
+                            options.EventFactory,
+                            options.RingBufferSize,
+                            options.TaskScheduler,
+                            options.ProducerType,
+                            options.WaitStrategy);
                         features.Add(feature);
                     }
                 }

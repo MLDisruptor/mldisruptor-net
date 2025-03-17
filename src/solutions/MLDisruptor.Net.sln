@@ -21,6 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{2E091E57-5
 		..\..\LICENSE = ..\..\LICENSE
 		..\..\package.json = ..\..\package.json
 		..\..\README.md = ..\..\README.md
+		..\..\setup.ps1 = ..\..\setup.ps1
 		..\..\tsconfig.json = ..\..\tsconfig.json
 	EndProjectSection
 EndProject
@@ -57,6 +58,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "packages", "packages", "{7F
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MLDisruptor.NET.PerformancePredictor.Tests", "..\tests\packages\MLDisruptor.NET.PerformancePredictor.Tests\MLDisruptor.NET.PerformancePredictor.Tests.csproj", "{9163346D-973D-4CB5-AA5D-2A70C639AE68}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{7ABD928D-5F23-4643-B872-3327DD3A847D}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\eng\lib\npm-script-runner.ts = ..\..\eng\lib\npm-script-runner.ts
+		..\..\eng\lib\versioning.ts = ..\..\eng\lib\versioning.ts
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tasks", "tasks", "{6B8F2CA9-1A6A-4434-9A1D-F8CFE85DA554}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\eng\tasks\build.mldisruptor.net.task.ts = ..\..\eng\tasks\build.mldisruptor.net.task.ts
+		..\..\eng\tasks\restore.mldisruptor.net.task.ts = ..\..\eng\tasks\restore.mldisruptor.net.task.ts
+		..\..\eng\tasks\test.mldisruptor.net.task.ts = ..\..\eng\tasks\test.mldisruptor.net.task.ts
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -100,6 +114,8 @@ Global
 		{6392B827-E591-4F31-BE92-06B1530285A3} = {51809625-7918-4E20-A0BE-7202B9D791D8}
 		{7F1A84D5-5A00-4CF6-B0B7-7661C8E086E3} = {6392B827-E591-4F31-BE92-06B1530285A3}
 		{9163346D-973D-4CB5-AA5D-2A70C639AE68} = {DA61B5FF-7E54-4752-A3BE-6977F2B08DC2}
+		{7ABD928D-5F23-4643-B872-3327DD3A847D} = {51809625-7918-4E20-A0BE-7202B9D791D8}
+		{6B8F2CA9-1A6A-4434-9A1D-F8CFE85DA554} = {51809625-7918-4E20-A0BE-7202B9D791D8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {120FC032-D23A-4547-A4F3-14FA4AA701BB}

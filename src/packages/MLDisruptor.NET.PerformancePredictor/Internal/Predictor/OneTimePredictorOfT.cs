@@ -22,7 +22,8 @@ namespace MLDisruptor.NET.PerformancePredictor.Internal.Predictor
                 return -1; // No trained model yet
             }
 
-            var oneTimePrediction = _context.Predict<T, OneTimePrediction>(model, input);
+            var options = new PredictOptions<T>(model, input);
+            var oneTimePrediction = _context.Predict<T, OneTimePrediction>(options);
             return oneTimePrediction.Prediction;
         }
 

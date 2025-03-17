@@ -14,14 +14,16 @@ namespace MLDisruptor.NET.PerformancePredictor.Internal.ExecutionData
             var queueDepth = currentSequence - bufferSize;
             var messageSize = Marshal.SizeOf(@event);
 
-            return ExecutionData.Create(
-                messageType,
-                messageSize,
-                Stopwatch.GetTimestamp(),
-                executionTime,
-                threadCount,
-                bufferSize,
-                queueDepth);
+            return ExecutionData.Builder()
+                .WithMessageType(messageType)
+                .WithMessageSize(messageSize)
+                .WithEnqueueTime(Stopwatch.GetTimestamp())
+                .WithExecutionTime(executionTime)
+                .WithThreadCount(threadCount)
+                .WithRingBufferSize(bufferSize)
+                .WithQueueDepth(queueDepth)
+                .Build();
+
         }
     }
 }

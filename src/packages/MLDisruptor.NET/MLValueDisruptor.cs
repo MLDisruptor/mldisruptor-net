@@ -58,7 +58,13 @@ namespace MLDisruptor.NET
         public MLValueDisruptor(Func<T> eventFactory, int ringBufferSize, TaskScheduler taskScheduler, ProducerType producerType, IWaitStrategy waitStrategy)
             : base(eventFactory, ringBufferSize, taskScheduler, producerType, waitStrategy)
         {
-            _ml = new MLAbilities<T>(eventFactory, ringBufferSize, taskScheduler, producerType, waitStrategy);
+            var options = new FeatureOptions<T>(
+                eventFactory,
+                ringBufferSize,
+                taskScheduler,
+                producerType,
+                waitStrategy);
+            _ml = new MLAbilities<T>(options);
         }
 
         /// <summary>
