@@ -17,6 +17,11 @@ namespace MLDisruptor.NET.PerformancePredictor.Internal.Feature
             _ringBufferSize = ringBufferSize;
         }
 
+        public void Initialize<T>(FeatureOptions<T> options)
+        {
+            _ringBufferSize = options.RingBufferSize;
+        }
+
         public int RingBufferSize => _ringBufferSize;
     }
 }

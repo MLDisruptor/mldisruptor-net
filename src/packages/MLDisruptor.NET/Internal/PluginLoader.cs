@@ -15,12 +15,7 @@
                 {
                     if (Activator.CreateInstance(type) is IMLFeature feature)
                     {
-                        feature.Initialize(
-                            options.EventFactory,
-                            options.RingBufferSize,
-                            options.TaskScheduler,
-                            options.ProducerType,
-                            options.WaitStrategy);
+                        feature.Initialize(options);
                         features.Add(feature);
                     }
                 }
