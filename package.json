@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "run:ci-check": "act --env VERSION=0.0.10",
+    "test:eng": "jest --config ./eng/jest.config.ts",
     "restore:mldisruptor-net": "dotnet restore ./src/solutions/MLDisruptor.Net.sln",
     "build:mldisruptor-net": "dotnet build ./src/solutions/MLDisruptor.Net.sln -c Release --no-restore /p:Version=$VERSION",
     "test:mldisruptor-net": "dotnet test ./src/solutions/MLDisruptor.Net.sln -c Release --no-build"
@@ -16,7 +17,9 @@
   "author": "ML Disruptor",
   "license": "MIT",
   "devDependencies": {
+    "jest": "^29.7.0",
     "npm-run-all": "^4.1.5",
+    "ts-jest": "^29.2.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2"
   },

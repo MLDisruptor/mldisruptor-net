@@ -104,7 +104,9 @@ function main() {
     const newVersion = incrementVersion(latestTag, incrementType);
     console.log(`New version: ${newVersion}`);
 
-    createGitTag(newVersion);
+    if (process.env.SKIP_TAGGING !== 'true') {
+        createGitTag(newVersion);
+    }
 
     // Output the version for GitHub Actions
     writeOutput('version', newVersion);

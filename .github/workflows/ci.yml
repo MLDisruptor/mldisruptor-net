@@ -38,11 +38,40 @@ jobs:
               run:
                 npm ci
 
+            - name: Is ACT
+              id: is_act
+              run: |
+                if [ -n "$ACT" ]; then
+                  echo "ISACT=true" >> $GITHUB_OUTPUT
+                else
+                  echo "ISACT=false" >> $GITHUB_OUTPUT
+                fi
+
+            - name: Check for changes in package directories
+              id: check_changes
+              run: |
+                if [ "${{ steps.is_act.outputs.ISACT }}" == "true" ]; then
+                  # ACT detected, check for local changes
+                  if git status --porcelain ./src/packages/MLDisruptor.NET ./src/packages/MLDisruptor.NET.PerformancePredictor | grep -q '^[AMRD]'; then
+                    echo "CHANGES=true" >> $GITHUB_OUTPUT
+                  else
+                    echo "CHANGES=false" >> $GITHUB_OUTPUT
+                  fi
+                else
+                  # Normal GitHub Actions behavior
+                  if git diff --quiet HEAD ./src/packages/MLDisruptor.NET ./src/packages/MLDisruptor.NET.PerformancePredictor; then
+                    echo "CHANGES=false" >> $GITHUB_OUTPUT
+                  else
+                    echo "CHANGES=true" >> $GITHUB_OUTPUT
+                  fi
+                fi
+
             - name: Increment version and create tag
-              id: versioning
-              run: npx tsx ./eng/lib/versioning.ts
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                SKIP_TAGGING: ${{ steps.check_changes.outputs.CHANGES == 'true' }}
+              id: versioning
+              run: npx tsx ./eng/lib/versioning.ts
 
             - name: Calculate Version Without Revision
               id: version_no_revision
@@ -71,6 +100,7 @@ jobs:
                 npx tsx ./eng/tasks/test.mldisruptor.net.task.ts
 
             - name: Pack ML Disruptor .NET
+              if: ${{ steps.check_changes.outputs.CHANGES == 'true' }}
               id: mldisruptor-net-pack
               run: |
                 dotnet pack ./src/packages/MLDisruptor.NET/MLDisruptor.NET.csproj -c Release --no-build --verbosity detailed /p:Version=${{ steps.versioning.outputs.version }}
@@ -78,6 +108,7 @@ jobs:
                 cp ./src/packages/MLDisruptor.NET/bin/Release/*.nupkg ./mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}
 
             - name: Pack ML Disruptor .NET Performance Predictor
+              if: ${{ steps.check_changes.outputs.CHANGES == 'true' }}
               id: mldisruptor-net-performancepredictor-pack
               run: |
                 dotnet pack ./src/packages/MLDisruptor.NET.PerformancePredictor/MLDisruptor.NET.PerformancePredictor.csproj -c Release --no-build --verbosity detailed /p:Version=${{ steps.versioning.outputs.version }}
@@ -86,22 +117,18 @@ jobs:
 
             - name: Publish ML Disruptor .NET NuGet
               env:
-                ISACT: ${{ env.ACT || 'false' }}
                 NUGET_API_KEY: ${{ secrets.NUGET_MLDISRUPTOR_NET_KEY }}
-              if: ${{ env.ISACT == 'false' && github.ref == 'refs/heads/main' && steps.tests.outcome == 'success' && steps.mldisruptor-net-pack.outcome == 'success' }}
+              if: ${{ steps.is_act.outputs.ISACT == 'false' && github.ref == 'refs/heads/main' && steps.tests.outcome == 'success' && steps.mldisruptor-net-pack.outcome == 'success' && steps.check_changes.outputs.CHANGES == 'true' }}
               run: dotnet nuget push ./mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}/*.nupkg --source https://api.nuget.org/v3/index.json --api-key $NUGET_API_KEY
 
             - name: Publish ML Disruptor .NET Performance Predictor NuGet
               env:
-                ISACT: ${{ env.ACT || 'false' }}
                 NUGET_API_KEY: ${{ secrets.NUGET_MLDISRUPTOR_NET_KEY }}
-              if: ${{ env.ISACT == 'false' && github.ref == 'refs/heads/main' && steps.tests.outcome == 'success' && steps.mldisruptor-net-performancepredictor-pack.outcome == 'success' }}
+              if: ${{ steps.is_act.outputs.ISACT == 'false' && github.ref == 'refs/heads/main' && steps.tests.outcome == 'success' && steps.mldisruptor-net-performancepredictor-pack.outcome == 'success' && steps.check_changes.outputs.CHANGES == 'true' }}
               run: dotnet nuget push ./mldisruptor-net-performancepredictor-artifacts_${{ steps.versioning.outputs.version }}/*.nupkg --source https://api.nuget.org/v3/index.json --api-key $NUGET_API_KEY
 
             - name: Upload ML Disruptor .NET Artifacts
-              env:
-                ISACT: ${{ env.ACT || 'false' }}
-              if: ${{ env.ISACT == 'false' && success() && steps.tests.outcome == 'success' }} # Only upload if tests succeed
+              if: ${{ steps.is_act.outputs.ISACT == 'false' && success() && steps.tests.outcome == 'success' }} # Only upload if tests succeed
               id: mldisruptor-net-artifacts
               uses: actions/upload-artifact@v4
               with:
@@ -109,17 +136,13 @@ jobs:
                 path: ./mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}
 
             - name: List ML Disruptor .NET Artifacts Directory for ${{ steps.versioning.outputs.version }}
-              env:
-                ISACT: ${{ env.ACT || 'false' }}
-              if: ${{ env.ISACT == 'true' }}
+              if: ${{ steps.is_act.outputs.ISACT == 'true' }}
               run: |
                 echo "Checking for .nupkg file in ./mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}"
                 ls -la ./mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}
 
             - name: Upload ML Disruptor .NET Performance Predictor Artifacts
-              env:
-                ISACT: ${{ env.ACT || 'false' }}
-              if: ${{ env.ISACT == 'false' && success() && steps.tests.outcome == 'success' }} # Only upload if tests succeed
+              if: ${{ steps.is_act.outputs.ISACT == 'false' && success() && steps.tests.outcome == 'success' }} # Only upload if tests succeed
               id: mldisruptor-net-performancepredictor-artifacts
               uses: actions/upload-artifact@v4
               with:
@@ -127,17 +150,13 @@ jobs:
                 path: ./mldisruptor-net-performancepredictor-artifacts_${{ steps.versioning.outputs.version }}
 
             - name: List ML Disruptor .NET Performance Predictor Artifacts Directory for ${{ steps.versioning.outputs.version }}
-              env:
-                ISACT: ${{ env.ACT || 'false' }}
-              if: ${{ env.ISACT == 'true' }}
+              if: ${{ steps.is_act.outputs.ISACT == 'true' }}
               run: |
                 echo "Checking for .nupkg file in ./mldisruptor-net-performancepredictor-artifacts_${{ steps.versioning.outputs.version }}"
                 ls -la ./mldisruptor-net-performancepredictor-artifacts_${{ steps.versioning.outputs.version }}
 
             - name: Local NuGet Test for ML Disruptor .NET
-              env:
-                ISACT: ${{ env.ACT || 'false' }}
-              if: ${{ env.ISACT == 'true' }}
+              if: ${{ steps.is_act.outputs.ISACT == 'true' && steps.check_changes.outputs.CHANGES == 'true' }}
               run: |
                 if [ -f "./mldisruptor-net-artifacts_${{ steps.versioning.outputs.version }}/MLDisruptor.NET.${{ steps.version_no_revision.outputs.VERSION_NO_REVISION }}.nupkg" ]; then
                   echo "NuGet package found: MLDisruptor.NET.${{ steps.version_no_revision.outputs.VERSION_NO_REVISION }}.nupkg"
@@ -147,9 +166,7 @@ jobs:
                 fi
 
             - name: Local NuGet Test for ML Disruptor .NET Performance Predictor
-              env:
-                ISACT: ${{ env.ACT || 'false' }}
-              if: ${{ env.ISACT == 'true' }}
+              if: ${{ steps.is_act.outputs.ISACT == 'true' && steps.check_changes.outputs.CHANGES == 'true' }}
               run: |
                 if [ -f "./mldisruptor-net-performancepredictor-artifacts_${{ steps.versioning.outputs.version }}/MLDisruptor.NET.PerformancePredictor.${{ steps.version_no_revision.outputs.VERSION_NO_REVISION }}.nupkg" ]; then
                   echo "NuGet package found: MLDisruptor.NET.PerformancePredictor.${{ steps.version_no_revision.outputs.VERSION_NO_REVISION }}.nupkg"
