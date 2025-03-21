@@ -44,22 +44,9 @@ jobs:
 
             - name: Check for changes in package directories
               id: check_changes
-              run: |
-                if [ "${{ steps.is_act_check.outputs.ISACT }}" == "true" ]; then
-                  # ACT detected, check for local changes
-                  if git status --porcelain ./src/packages/MLDisruptor.NET ./src/packages/MLDisruptor.NET.PerformancePredictor | grep -q '^[AMRD]'; then
-                    echo "CHANGES=true" >> $GITHUB_OUTPUT
-                  else
-                    echo "CHANGES=false" >> $GITHUB_OUTPUT
-                  fi
-                else
-                  # Normal GitHub Actions behavior
-                  if git diff --quiet HEAD ./src/packages/MLDisruptor.NET ./src/packages/MLDisruptor.NET.PerformancePredictor; then
-                    echo "CHANGES=false" >> $GITHUB_OUTPUT
-                  else
-                    echo "CHANGES=true" >> $GITHUB_OUTPUT
-                  fi
-                fi
+              env:
+                ISACT: ${{ steps.is_act_check.outputs.ISACT }}
+              run: npx tsx ./eng/lib/check-package-changes.ts
 
             - name: Increment version and create tag
               env:
@@ -70,10 +57,9 @@ jobs:
 
             - name: Calculate Version Without Revision
               id: version_no_revision
-              run: |
-                VERSION_NO_REVISION=${{ steps.versioning.outputs.version }} # Full version
-                VERSION_NO_REVISION=${VERSION_NO_REVISION%.*} # Remove the last ".0"
-                echo "VERSION_NO_REVISION=$VERSION_NO_REVISION" >> $GITHUB_OUTPUT
+              env:
+                VERSION: ${{ steps.versioning.outputs.version }}
+              run: npx tsx ./eng/lib/calculate-version-no-revision.ts
 
             - name: Restore ML Disruptor .NET
               run:
