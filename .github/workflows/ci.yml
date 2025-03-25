@@ -38,6 +38,9 @@ jobs:
               run:
                 npm ci
 
+            - name: Run engine tests
+              run: npx tsx ./eng/tasks/test.engine.task.ts
+
             - name: Is ACT
               id: is_act_check
               run: npx tsx ./eng/lib/is-act-check.ts
@@ -55,7 +58,7 @@ jobs:
               id: versioning
               run: npx tsx ./eng/lib/versioning.ts
 
-            - name: Calculate Version Without Revision
+            - name: Calculate version without revision
               id: version_no_revision
               env:
                 VERSION: ${{ steps.versioning.outputs.version }}
