@@ -7,7 +7,7 @@ import { ConsoleLogger } from '../core/console-logger';
 export class TaggingProcessor {
     private static readonly ACT_KEY = 'ACT';
     private static readonly CHANGES_KEY = 'CHANGES';
-    private static readonly VERSION_KEY = 'VERSION';
+    private static readonly VERSION_KEY = 'version';
     private static readonly GITHUB_TOKEN_KEY = 'GITHUB_TOKEN';
 
     constructor(

@@ -5,7 +5,7 @@ import { RecordProvider } from '../core/record-provider';
 import { VersionManager } from '../core/version-manager';
 
 export class VersionNoRevisionProcessor {
-    private static readonly VERSION = 'VERSION';
+    private static readonly VERSION = 'version';
     private static readonly VERSION_NO_REVISION = 'VERSION_NO_REVISION';
     private static readonly GITHUB_OUTPUT = 'GITHUB_OUTPUT';
 

@@ -41,7 +41,7 @@ describe('TaggingProcessor', () => {
         processor = new TaggingProcessor(provider, runner, logger);
     });
 
-    it('should exit when VERSION is not set', () => {
+    it('should exit when version is not set', () => {
         provider.get.mockReturnValue('');
         jest.spyOn(ProcessOperations, 'exit').mockImplementation(() => { });
 
@@ -54,7 +54,7 @@ describe('TaggingProcessor', () => {
     it('should exit when GITHUB_TOKEN is not set', () => {
         provider.has.mockReturnValue(false); // not act
         provider.get.mockImplementation((key) => {
-            if (key === 'VERSION') return '1.0.0'; // has version
+            if (key === 'version') return '1.0.0'; // has version
             else if (key === 'CHANGES') return 'true'; // has changes
             else return undefined as unknown as any;
         });
@@ -72,7 +72,7 @@ describe('TaggingProcessor', () => {
     };
 
     it('should skip processing when ACT is set', () => {
-        setupProviderMock(true, { VERSION: '1.0.0' });
+        setupProviderMock(true, { version: '1.0.0' });
         jest.spyOn(ProcessOperations, 'exit').mockImplementation(() => { });
 
         processor.process();
@@ -82,7 +82,7 @@ describe('TaggingProcessor', () => {
     });
 
     it('should skip processing when CHANGES is false', () => {
-        setupProviderMock(false, { VERSION: '1.0.0', CHANGES: 'false' });
+        setupProviderMock(false, { version: '1.0.0', CHANGES: 'false' });
         jest.spyOn(ProcessOperations, 'exit').mockImplementation(() => { });
 
         processor.process();
@@ -94,7 +94,7 @@ describe('TaggingProcessor', () => {
     it('should perform git operations', () => {
         provider.has.mockReturnValue(false);
         provider.get.mockImplementation((key) => {
-            if (key === 'VERSION') return '1.0.0';
+            if (key === 'version') return '1.0.0';
             else if (key === 'CHANGES') return 'true';
             else if (key === 'GITHUB_TOKEN') return 'token';
             else return undefined as unknown as any;

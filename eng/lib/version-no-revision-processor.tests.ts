@@ -65,7 +65,7 @@ describe('VersionNoRevisionProcessor', () => {
 
         processor.process();
 
-        expect(provider.get).toHaveBeenCalledWith('VERSION');
+        expect(provider.get).toHaveBeenCalledWith('version');
     });
 
     it('should calculate VERSION_NO_REVISION using VersionManager', () => {
