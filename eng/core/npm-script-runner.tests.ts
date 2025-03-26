@@ -1,6 +1,7 @@
 import { NpmScriptRunner } from './npm-script-runner';
 import { SynchronousCommandRunner } from '../core/synchronous-command-runner';
 import { ProcessOperations } from '../core/process-operations';
+import { ConsoleLogger } from './console-logger';
 
 jest.mock('../core/synchronous-command-runner');
 jest.mock('../core/process-operations');
@@ -8,14 +9,16 @@ jest.mock('../core/process-operations');
 describe('NpmScriptRunner', () => {
     let mockRunner: jest.Mocked<SynchronousCommandRunner>;
     let exitSpy: jest.SpyInstance;
-    let consoleLogSpy: jest.SpyInstance;
-    let consoleErrorSpy: jest.SpyInstance;
+    let logger: jest.Mocked<ConsoleLogger>;
 
     beforeEach(() => {
-        consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => { });
-        consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
         mockRunner = new SynchronousCommandRunner() as jest.Mocked<SynchronousCommandRunner>;
         exitSpy = jest.spyOn(ProcessOperations, 'exit').mockImplementation(() => { });
+
+        logger = {
+            log: jest.fn(),
+            error: jest.fn()
+        } as unknown as jest.Mocked<ConsoleLogger>;
     });
 
     afterEach(() => {
@@ -23,7 +26,7 @@ describe('NpmScriptRunner', () => {
     });
 
     it('should execute the given npm script', () => {
-        const runner = new NpmScriptRunner(mockRunner);
+        const runner = new NpmScriptRunner(mockRunner, {}, logger);
         runner.run('test-script');
 
         expect(mockRunner.run).toHaveBeenCalledWith(
@@ -38,7 +41,7 @@ describe('NpmScriptRunner', () => {
 
     it('should merge provided env variables with process.env', () => {
         const customEnv = { CUSTOM_VAR: 'value' };
-        const runner = new NpmScriptRunner(mockRunner, customEnv);
+        const runner = new NpmScriptRunner(mockRunner, customEnv, logger);
         runner.run('test-script');
 
         expect(mockRunner.run).toHaveBeenCalledWith(
@@ -54,11 +57,11 @@ describe('NpmScriptRunner', () => {
     });
 
     it('should log the start and successful completion of the script execution', () => {
-        const runner = new NpmScriptRunner(mockRunner);
+        const runner = new NpmScriptRunner(mockRunner, {}, logger);
         runner.run('test-script');
 
-        expect(consoleLogSpy).toHaveBeenCalledWith('Running script: test-script');
-        expect(consoleLogSpy).toHaveBeenCalledWith('Running script: test-script completed successfully.');
+        expect(logger.log).toHaveBeenCalledWith('Running script: test-script');
+        expect(logger.log).toHaveBeenCalledWith('Running script: test-script completed successfully.');
     });
 
     it('should log an error and exit with status code 1 if an error occurs', () => {
@@ -66,20 +69,20 @@ describe('NpmScriptRunner', () => {
             throw new Error('Test error');
         });
 
-        const runner = new NpmScriptRunner(mockRunner);
+        const runner = new NpmScriptRunner(mockRunner, {}, logger);
         runner.run('test-script');
 
-        expect(consoleErrorSpy).toHaveBeenCalledWith('Error running script:', 'Test error');
+        expect(logger.error).toHaveBeenCalledWith('Error running script:', 'Test error');
         expect(exitSpy).toHaveBeenCalledWith(1);
     });
 
     it('should throw an error if the script name is empty', () => {
-        const runner = new NpmScriptRunner(mockRunner);
+        const runner = new NpmScriptRunner(mockRunner, {}, logger);
 
         runner.run('');
 
         expect(mockRunner.run).not.toHaveBeenCalled();
-        expect(consoleErrorSpy).toHaveBeenCalledWith('Error running script:', 'Script name is required.');
+        expect(logger.error).toHaveBeenCalledWith('Error running script:', 'Script name is required.');
         expect(exitSpy).toHaveBeenCalledWith(1);
     });
 });

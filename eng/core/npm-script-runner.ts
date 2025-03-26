@@ -1,12 +1,16 @@
 import { ProcessOperations } from '../core/process-operations';
 import { RunnerOptions } from '../core/runner-options';
 import { SynchronousCommandRunner } from '../core/synchronous-command-runner';
+import { ConsoleLogger } from './console-logger';
 import { StdioOptions } from './stdio-builder';
 
 export class NpmScriptRunner {
     private readonly command: string;
 
-    constructor(private readonly commandRunner: SynchronousCommandRunner = new SynchronousCommandRunner(), private readonly env: Record<string, string> = {}) {
+    constructor(
+        private readonly commandRunner: SynchronousCommandRunner = new SynchronousCommandRunner(),
+        private readonly env: Record<string, string> = {},
+        private readonly logger: ConsoleLogger = ConsoleLogger.instance) {
         this.command = 'npm';
     }
 
@@ -20,9 +24,9 @@ export class NpmScriptRunner {
         const options = this.buildRunnerOptions();
 
         try {
-            console.log(`Running script: ${script}`);
+            this.logger.log(`Running script: ${script}`);
             this.commandRunner.run(this.command, args, options);
-            console.log(`Running script: ${script} completed successfully.`);
+            this.logger.log(`Running script: ${script} completed successfully.`);
         } catch (error: unknown) {
             this.handleError(error);
         }
@@ -41,9 +45,9 @@ export class NpmScriptRunner {
 
     private handleError(error: unknown): void {
         if (error instanceof Error) {
-            console.error('Error running script:', error.message);
+            this.logger.error('Error running script:', error.message);
         } else {
-            console.error('Error running script:', error);
+            this.logger.error('Error running script:', error);
         }
         ProcessOperations.exit(1);
     }

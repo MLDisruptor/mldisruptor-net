@@ -2,6 +2,7 @@ import { GithubOutputWriter } from "./github-output-writer";
 import { FileWriter } from "./file-writer";
 import { ProcessOperations } from "./process-operations";
 import { RecordProvider } from "./record-provider";
+import { ConsoleLogger } from "./console-logger";
 
 jest.mock("./file-writer");
 jest.mock("./process-operations");
@@ -9,6 +10,7 @@ jest.mock("./process-operations");
 describe("GithubOutputWriter", () => {
     let recordProviderMock: jest.Mocked<RecordProvider>;
     let fileWriterMock: jest.Mocked<FileWriter>;
+    let logger: jest.Mocked<ConsoleLogger>;
 
     beforeEach(() => {
         recordProviderMock = {
@@ -17,6 +19,11 @@ describe("GithubOutputWriter", () => {
 
         fileWriterMock = new FileWriter() as jest.Mocked<FileWriter>;
         jest.spyOn(fileWriterMock, "appendToFile").mockImplementation();
+
+        logger = {
+            log: jest.fn(),
+            error: jest.fn(),
+        } as unknown as jest.Mocked<ConsoleLogger>;
     });
 
     afterEach(() => {
@@ -25,7 +32,7 @@ describe("GithubOutputWriter", () => {
 
     it("should write key-value pairs to the GitHub output file", () => {
         recordProviderMock.get.mockReturnValue("path/to/github-output");
-        const writer = new GithubOutputWriter(recordProviderMock);
+        const writer = new GithubOutputWriter(recordProviderMock, logger);
 
         writer.write("key", "value");
 
@@ -38,13 +45,12 @@ describe("GithubOutputWriter", () => {
     });
 
     it("should log an error if the GitHub output path is invalid", () => {
-        console.error = jest.fn();
         recordProviderMock.get.mockReturnValue("");
-        const writer = new GithubOutputWriter(recordProviderMock);
+        const writer = new GithubOutputWriter(recordProviderMock, logger);
 
         writer.write("key", "value");
 
-        expect(console.error).toHaveBeenCalledWith("Invalid GITHUB_OUTPUT path");
+        expect(logger.error).toHaveBeenCalledWith("Invalid GITHUB_OUTPUT path");
         expect(fileWriterMock.appendToFile).not.toHaveBeenCalled();
     });
 
@@ -52,7 +58,7 @@ describe("GithubOutputWriter", () => {
         recordProviderMock.get.mockReturnValue("path/to/github-output");
         jest.spyOn(ProcessOperations, "exit").mockImplementation(() => { });
 
-        const writer = new GithubOutputWriter(recordProviderMock);
+        const writer = new GithubOutputWriter(recordProviderMock, logger);
         jest.spyOn(writer as any, "safeExecute").mockReturnValue({ isError: true });
 
         writer.write("key", "value", true);
@@ -64,7 +70,7 @@ describe("GithubOutputWriter", () => {
         recordProviderMock.get.mockReturnValue("path/to/github-output");
         jest.spyOn(ProcessOperations, "exit").mockImplementation(() => { });
 
-        const writer = new GithubOutputWriter(recordProviderMock);
+        const writer = new GithubOutputWriter(recordProviderMock, logger);
         jest.spyOn(writer as any, "safeExecute").mockReturnValue({ isError: true });
 
         writer.write("key", "value", false);
@@ -78,7 +84,7 @@ describe("GithubOutputWriter", () => {
             throw new Error("Test Error");
         });
 
-        const writer = new GithubOutputWriter(recordProviderMock);
+        const writer = new GithubOutputWriter(recordProviderMock, logger);
 
         expect(() => writer.write("key", "value")).not.toThrow();
     });

@@ -38,6 +38,11 @@ export class VersionManager {
     }
 
     static calculateVersionNoRevision(version: string): string {
-        return version.split('.').slice(0, -1).join('.');
+        const versionParts = version.split('.');
+        if (versionParts.length < 4) {
+            return version;
+        } else {
+            return versionParts.slice(0, -1).join('.');
+        }
     }
 }

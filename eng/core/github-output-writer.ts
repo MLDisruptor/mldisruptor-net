@@ -1,3 +1,4 @@
+import { ConsoleLogger } from "./console-logger";
 import { FileWriter } from "./file-writer";
 import { ProcessOperations } from "./process-operations";
 import { RecordProvider } from "./record-provider";
@@ -5,7 +6,9 @@ import { RecordProvider } from "./record-provider";
 export class GithubOutputWriter {
     private static readonly GITHUB_OUTPUT_KEY = 'GITHUB_OUTPUT';
 
-    public constructor(private readonly provider: RecordProvider) { }
+    public constructor(
+        private readonly provider: RecordProvider,
+        private readonly logger: ConsoleLogger = ConsoleLogger.instance) { }
 
     public write(key: string, value: string, shouldExitOnFailure: boolean = false): void {
         const githubOutput = this.provider.get(GithubOutputWriter.GITHUB_OUTPUT_KEY);
@@ -19,7 +22,7 @@ export class GithubOutputWriter {
         });
 
         if (result.isError) {
-            console.error(result.message);
+            this.logger.error(result.message);
             if (shouldExitOnFailure) {
                 ProcessOperations.exit(1);
             }

@@ -60,4 +60,21 @@ describe('VersionManager', () => {
             expect(VersionManager.defaultVersion).toBe('0.0.10.0');
         });
     });
+
+    describe('VersionManager.calculateVersionNoRevision', () => {
+        it('should return the same version if it has less than 4 parts', () => {
+            expect(VersionManager.calculateVersionNoRevision('1.0')).toBe('1.0');
+            expect(VersionManager.calculateVersionNoRevision('1.0.0')).toBe('1.0.0');
+        });
+
+        it('should remove the revision part if the version has 4 parts', () => {
+            expect(VersionManager.calculateVersionNoRevision('1.0.0.0')).toBe('1.0.0');
+            expect(VersionManager.calculateVersionNoRevision('2.3.4.5')).toBe('2.3.4');
+        });
+
+        it('should handle edge cases like empty strings or invalid formats gracefully', () => {
+            expect(VersionManager.calculateVersionNoRevision('')).toBe('');
+            expect(VersionManager.calculateVersionNoRevision('1')).toBe('1');
+        });
+    });
 });
